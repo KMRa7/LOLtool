@@ -369,7 +369,10 @@
                 const payload = {
                     contents: chatHistory,
                 };
-                const apiKey = ""; // APIキーはCanvasによって自動的に提供されます
+                
+                // ここにAPIキーを設定してください！
+                const apiKey = "AIzaSyBDQ4GRvzCyN7pmguAFiO6b6YaFnWHMlDM"; // <-- この行をあなたのAPIキーに置き換えてください！
+
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
                 let response;
