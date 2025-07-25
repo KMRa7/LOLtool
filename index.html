@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI LoL チーム構成アナライザー</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!--Tailwind CSS CDN--><script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
@@ -89,8 +88,7 @@
         </p>
 
         <div class="space-y-4 mb-8" id="championSelectionArea">
-            <!-- Champion selection for Top Lane -->
-            <div class="flex items-center">
+            <!--Champion selection for Top Lane--><div class="flex items-center">
                 <label class="block text-gray-700 text-sm min-w-[120px] font-semibold">トップレーン:</label>
                 <div id="topSelection" class="selected-champion-display flex-grow" data-role="top">
                     <img src="https://placehold.co/48x48/cccccc/ffffff?text=?" alt="未選択" class="rounded-full w-12 h-12">
@@ -98,8 +96,7 @@
                 </div>
             </div>
 
-            <!-- Champion selection for Jungle -->
-            <div class="flex items-center">
+            <!--Champion selection for Jungle--><div class="flex items-center">
                 <label class="block text-gray-700 text-sm min-w-[120px] font-semibold">ジャングル:</label>
                 <div id="jungleSelection" class="selected-champion-display flex-grow" data-role="jungle">
                     <img src="https://placehold.co/48x48/cccccc/ffffff?text=?" alt="未選択" class="rounded-full w-12 h-12">
@@ -107,8 +104,7 @@
                 </div>
             </div>
 
-            <!-- Champion selection for Mid Lane -->
-            <div class="flex items-center">
+            <!--Champion selection for Mid Lane--><div class="flex items-center">
                 <label class="block text-gray-700 text-sm min-w-[120px] font-semibold">ミッドレーン:</label>
                 <div id="midSelection" class="selected-champion-display flex-grow" data-role="mid">
                     <img src="https://placehold.co/48x48/cccccc/ffffff?text=?" alt="未選択" class="rounded-full w-12 h-12">
@@ -116,8 +112,7 @@
                 </div>
             </div>
 
-            <!-- Champion selection for ADC -->
-            <div class="flex items-center">
+            <!--Champion selection for ADC--><div class="flex items-center">
                 <label class="block text-gray-700 text-sm min-w-[120px] font-semibold">ADC:</label>
                 <div id="adcSelection" class="selected-champion-display flex-grow" data-role="adc">
                     <img src="https://placehold.co/48x48/cccccc/ffffff?text=?" alt="未選択" class="rounded-full w-12 h-12">
@@ -125,11 +120,10 @@
                 </div>
             </div>
 
-            <!-- Champion selection for Support -->
-            <div class="flex items-center">
+            <!--Champion selection for Support--><div class="flex items-center">
                 <label class="block text-gray-700 text-sm min-w-[120px] font-semibold">サポート:</label>
                 <div id="supportSelection" class="selected-champion-display flex-grow" data-role="support">
-                    <img src="https://placehold.co/48x48/cccccc/ffffff?text=?" alt="未選択" class="rounded-full w-12 h-12">
+                    <img src="https://placehold.co/48x48/cccccc/ffffff?text=?" alt="未選択" class="rounded-full w-12 h-16">
                     <span class="selected-champion-name placeholder-text">チャンピオンを選択</span>
                 </div>
             </div>
@@ -155,8 +149,7 @@
         </div>
     </div>
 
-    <!-- Champion Selection Modal -->
-    <div id="championModal" class="modal-overlay fixed inset-0 flex items-center justify-center p-4 hidden">
+    <!--Champion Selection Modal--><div id="championModal" class="modal-overlay fixed inset-0 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-bold text-gray-800">チャンピオンを選択</h2>
@@ -165,8 +158,7 @@
             <input type="text" id="championSearch" placeholder="チャンピオンを検索..."
                    class="mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full">
             <div id="championList" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4 overflow-y-auto pb-4 flex-grow">
-                <!-- Champion cards will be inserted here by JavaScript -->
-                <div class="flex flex-col items-center champion-card p-2 rounded-lg">
+                <!--Champion cards will be inserted here by JavaScript--><div class="flex flex-col items-center champion-card p-2 rounded-lg">
                     <img src="https://ddragon.leagueoflegends.com/cdn/14.13.1/img/champion/Aatrox.png" alt="Aatrox" class="w-16 h-16 object-cover rounded-full mb-1 border-2 border-transparent">
                     <span class="text-xs font-medium text-gray-700">Aatrox</span>
                 </div>
@@ -407,11 +399,14 @@
                                 await new Promise(resolve => setTimeout(resolve, delay));
                                 retryCount++;
                             } else {
-                                throw new Error(`APIリクエストが失敗しました: ${response.statusText}`);
+                                // その他のHTTPエラー
+                                const errorData = await response.json().catch(() => ({})); // エラーレスポンスボディをパース
+                                console.error("API Error Response Data:", errorData);
+                                throw new Error(`APIリクエストが失敗しました: ${response.status} ${response.statusText}. 詳細: ${JSON.stringify(errorData)}`);
                             }
                         }
                     } catch (fetchError) {
-                        console.error("Fetch error:", fetchError);
+                        console.error("Fetch error during retry:", fetchError);
                         const delay = initialDelay * Math.pow(2, retryCount);
                         console.warn(`Retrying in ${delay / 1000} seconds...`);
                         await new Promise(resolve => setTimeout(resolve, delay));
@@ -419,10 +414,24 @@
                     }
                 }
 
-                if (!result || !result.candidates || result.candidates.length === 0 ||
-                    !result.candidates[0].content || !result.candidates[0].content.parts ||
-                    result.candidates[0].content.parts.length === 0) {
-                    throw new Error("AIからの応答が予期せぬ形式です。");
+                // API呼び出しが最終的に失敗した場合
+                if (retryCount === maxRetries && (!response || !response.ok)) {
+                    throw new Error("APIリクエストが複数回失敗しました。後でもう一度お試しください。");
+                }
+
+                // ここで `result` オブジェクト全体をログ出力
+                console.log("Gemini API Response Result:", result);
+
+                if (!result || !result.candidates || result.candidates.length === 0) {
+                    // promptFeedbackがあるか確認
+                    if (result && result.promptFeedback && result.promptFeedback.blockReason) {
+                        throw new Error(`AIからの応答がブロックされました。理由: ${result.promptFeedback.blockReason}`);
+                    }
+                    throw new Error("AIからの応答が予期せぬ形式です。候補が見つかりませんでした。");
+                }
+
+                if (!result.candidates[0].content || !result.candidates[0].content.parts || result.candidates[0].content.parts.length === 0) {
+                    throw new Error("AIからの応答が予期せぬ形式です。コンテンツが見つかりませんでした。");
                 }
 
                 const aiResponseText = result.candidates[0].content.parts[0].text;
